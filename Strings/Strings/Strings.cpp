@@ -1,41 +1,47 @@
-﻿#include <iostream>
-#include <string>
-#include <map>
-#include <set>
+﻿#include <string>
 #include <fstream>
+
+// 13.6.Строка(4)
+
+// В заданной строке символов из заглавных латинских букв найти подстроку, которая включает
+// наибольшее количество букв, встречающихся в этой подстроке в единственном экземпляре.Если
+// таких строк несколько, выдать наименьшую по алфавиту.
+
+void UpdateMaxSubstr(std::string& maxSubstr, std::string& currentSubstr)
+{
+	if (currentSubstr.length() == maxSubstr.length())
+	{
+		maxSubstr = maxSubstr.compare(currentSubstr) <= 0 ? maxSubstr : currentSubstr;
+	}
+	else if (currentSubstr.length() > maxSubstr.length())
+	{
+		maxSubstr = currentSubstr;
+	}
+}
 
 std::string GetMaxSubstrWithoutRepeatingChars(const std::string& str)
 {
-	std::string maxSubstr, currentSubstr;
+	std::string maxSubstr;
 
-	std::set<char> metChars;
+	std::string currentSubstr;
 
 	for (const auto& ch : str)
 	{
-		if (metChars.find(ch) == metChars.end())
-		{
-			currentSubstr += ch;
+		const auto extraCharPos = currentSubstr.find(ch);
 
-			metChars.insert(ch);
-		}
-		else
+		if (extraCharPos != std::string::npos)
 		{
-			if (currentSubstr.length() == maxSubstr.length())
-			{
-				maxSubstr = maxSubstr.compare(currentSubstr) <= 0  ? maxSubstr : currentSubstr;
-			}
-			else if (currentSubstr.length() > maxSubstr.length())
-			{
-				maxSubstr = currentSubstr;
-			}
+			UpdateMaxSubstr(maxSubstr, currentSubstr);
 
-			currentSubstr.erase(currentSubstr.begin());
-		
-			currentSubstr += ch;
+			currentSubstr = currentSubstr.substr(extraCharPos + 1);
 		}
+
+		currentSubstr += ch;
 	}
 
-	return  maxSubstr;
+	UpdateMaxSubstr(maxSubstr, currentSubstr);
+
+	return maxSubstr;
 }
 
 int main()
@@ -46,9 +52,11 @@ int main()
 
 	std::string str;
 
-	std::getline(std::cin, str);
+	std::getline(input, str);
 
-	std::cout << GetMaxSubstrWithoutRepeatingChars(str) << std::endl;
+	std::getline(input, str);
+
+	output << GetMaxSubstrWithoutRepeatingChars(str) << std::endl;
 
 	return 0;
 }

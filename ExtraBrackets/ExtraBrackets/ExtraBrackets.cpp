@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 // Ильин Максим, ПС-21
 
@@ -39,33 +40,103 @@ bool IsValidExpression(const std::string& expression)
 		}
 	}
 
-	return  counter == 0;
+	return counter == 0;
 }
 
-bool RemoveExtremePairOfBrackets(std::string& expression)
+int CountBracketsToRemove(const std::string& expression)
 {
-	if (expression.length() < 2)
+	int counter = 0;
+
+	size_t rightBracketsCounter = 0;
+	
+	size_t leftBracketsCounter = 0;
+
+	bool rightBracketHasBeenMet = false;
+
+	for (const auto ch : expression)
 	{
-		return false;
+		if (ch == '(')
+		{
+			counter++;
+
+			if (!rightBracketHasBeenMet)
+			{
+				leftBracketsCounter++;
+			}
+
+			rightBracketsCounter = 0;
+		}
+
+		if (ch == ')')
+		{
+			counter--;
+
+			rightBracketsCounter++;
+		
+			rightBracketHasBeenMet = true;
+		}
+
+		if (counter < 0)
+		{
+			return -1;
+		}
 	}
 
-	expression.erase(expression.begin());
+	if (counter == 0)
+	{
+		return  std::min(rightBracketsCounter, leftBracketsCounter);
+	}
 
-	expression.erase(expression.end() - 1);
+	return -1;
+}
 
-	return true;
+void RemoveBraces(int quantity, std::string& str)
+{
+	str.erase(0, quantity);
+
+	str.erase(str.length() - quantity, quantity);
+}
+
+int addMissingBrackets(std::string& str, int removeBracketsQuantity)
+{
+	int addedBracketsQ = 0;
+
+	while (!IsValidExpression(str))
+	{
+		str.insert(str.begin(), '(');
+		
+		str.push_back(')');
+	
+		addedBracketsQ++;
+
+		if (addedBracketsQ == removeBracketsQuantity + 1)
+		{
+			return -1;
+		}
+	}
+
+	return addedBracketsQ;
 }
 
 int HowManyBracketsCouldBeRemoved(std::string expression)
 {
-	int counter = 0;
+	const auto bracketsForRemove = CountBracketsToRemove(expression);
 
-	while (RemoveExtremePairOfBrackets(expression) && IsValidExpression(expression))
+	if (bracketsForRemove == -1)
 	{
-		counter++;
+		return 0;
 	}
 
-	return counter;
+	RemoveBraces(bracketsForRemove, expression);
+
+	const auto addedBracketsQ = addMissingBrackets(expression, bracketsForRemove);
+
+	if (addedBracketsQ == -1)
+	{
+		return 0;
+	}
+
+	return bracketsForRemove - addedBracketsQ;
 }
 
 int main()
