@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 typedef std::vector<int> Number;
 
@@ -186,7 +187,7 @@ Number operator/(Number a, Number const& b)
 
 	Number result;
 
-	while (a >= b)
+	while (!x.empty())
 	{
 		int k = 0;
 
@@ -203,6 +204,8 @@ Number operator/(Number a, Number const& b)
 	}
 
 	reverse(result.begin(), result.end());
+
+	normalize(result);
 
 	return result;
 }
