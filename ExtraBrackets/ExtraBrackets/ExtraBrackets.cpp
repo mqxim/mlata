@@ -6,10 +6,10 @@
 // Ильин Максим, ПС-21
 
 //7.2.Скобки(4)
-//Последовательность круглых скобок называют правильной, если можно добавить в
-//нее числа и знаки арифметических операций так, что полученное алгебраическое
-//выражение станет корректным.Например, скобочная последовательность(())()
-//является правильной, а(())) и())(() такими не являются.Пустая последовательность
+//  Последовательность круглых скобок называют правильной, если можно добавить в
+//  нее числа и знаки арифметических операций так, что полученное алгебраическое
+//  выражение станет корректным.Например, скобочная последовательность(())()
+//  является правильной, а(())) и())(() такими не являются.Пустая последовательность
 //	также считается правильной.
 //	Задана правильная скобочная последовательность.Назовем парой внешних скобок
 //	первую открывающую и последнюю закрывающую скобки.
@@ -53,9 +53,9 @@ int CountBracketsToRemove(const std::string& expression)
 
 	bool rightBracketHasBeenMet = false;
 
-	for (const auto ch : expression)
+	for (size_t i = 0; i < expression.length(); ++i)
 	{
-		if (ch == '(')
+		if (expression[i] == '(')
 		{
 			counter++;
 
@@ -67,16 +67,21 @@ int CountBracketsToRemove(const std::string& expression)
 			rightBracketsCounter = 0;
 		}
 
-		if (ch == ')')
+		if (expression[i] == ')')
 		{
 			counter--;
 
 			rightBracketsCounter++;
-		
+
 			rightBracketHasBeenMet = true;
 		}
 
 		if (counter < 0)
+		{
+			return -1;
+		}
+
+		if ((i > 0) and (i < expression.length() - 2) and (counter == 0))
 		{
 			return -1;
 		}
@@ -99,7 +104,7 @@ void RemoveBraces(int quantity, std::string& str)
 
 int addMissingBrackets(std::string& str, int removeBracketsQuantity)
 {
-	int addedBracketsQ = 0;
+	/*int addedBracketsQ = 0;
 
 	while (!IsValidExpression(str))
 	{
@@ -115,7 +120,42 @@ int addMissingBrackets(std::string& str, int removeBracketsQuantity)
 		}
 	}
 
-	return addedBracketsQ;
+	return addedBracketsQ;*/
+
+	if (IsValidExpression(str))
+	{
+		return 0;
+	}
+	
+	int rightQ = 0;
+
+	for (size_t i = 0; i < str.length(); ++i)
+	{
+		if (str[i] == ')')
+		{
+			rightQ++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	int leftQ = 0;
+
+	for (size_t i = str.length() - 1; i != 0; i--)
+	{
+		if (str[i] == '(')
+		{
+			leftQ++;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	return std::max(leftQ, rightQ);
 }
 
 int HowManyBracketsCouldBeRemoved(std::string expression)
@@ -130,7 +170,7 @@ int HowManyBracketsCouldBeRemoved(std::string expression)
 	RemoveBraces(bracketsForRemove, expression);
 
 	const auto addedBracketsQ = addMissingBrackets(expression, bracketsForRemove);
-
+		
 	if (addedBracketsQ == -1)
 	{
 		return 0;
