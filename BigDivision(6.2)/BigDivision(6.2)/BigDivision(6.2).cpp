@@ -4,6 +4,15 @@
 #include <algorithm>
 #include <iostream>
 
+// Ильин Максим, ПС-21
+
+//  6.2.Длинное деление(7)
+
+//  Заданы два целых положительных числа.Требуется найти их частное и остаток от деления.
+//  Ввод.В первой строке файла INPUT.TXT задано делимое, во второй – делитель.Количество
+//  цифр делимого и делителя от 1 до 100.
+//  Вывод.В первой строке файла OUTPUT.TXT вывести частное, во второй строке - остаток.
+
 typedef std::vector<int> Number;
 
 Number fromInt(unsigned x)
@@ -203,7 +212,7 @@ Number operator/(Number a, Number const& b)
 		x.erase(x.begin());
 	}
 
-	reverse(result.begin(), result.end());
+	std::reverse(result.begin(), result.end());
 
 	normalize(result);
 
