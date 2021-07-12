@@ -1,0 +1,1 @@
+g++ main.cpp selectOperands.cpp removeExtraBrackets.cpp operationsPriority.cpp eraseBlanks.cpp -o main.exe
